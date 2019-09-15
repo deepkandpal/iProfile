@@ -10,7 +10,7 @@ import Foundation
 
 
 class NetworkManager: NSObject, URLSessionDelegate {
-  func getProfileDataFromServer(url: URL, completion: @escaping (ProfileModel?, Error?) -> Void) {
+  func getProfileDataFromServer(url: URL, completion: @escaping ([Profile]?, Error?) -> Void) {
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = "GET"
     
@@ -34,9 +34,8 @@ class NetworkManager: NSObject, URLSessionDelegate {
         return
       }
       do {
-        let peronalInfoModel = try JSONDecoder().decode(ProfileModel.self, from: responseData)
-        print(peronalInfoModel)
-        completion(peronalInfoModel, nil)
+         let peronalInfoArray = try JSONDecoder().decode([Profile].self, from: responseData)
+        completion(peronalInfoArray, nil)
       } catch {
         completion(nil,error)
       }

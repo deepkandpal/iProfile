@@ -6,31 +6,26 @@
 //  Copyright © 2019 Deep. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class ProfileListPresenter:NSObject {
+class ProfileListPresenter:ProfileViewToPresenterProtocol {
   
-  var view: PresenterToViewProtocol?
+  var view: PresenterToProfileViewProtocol?
   
   var interactor: PresenterToInteractorProtocol?
   
   var router: PresenterToRouterProtocol?
   
-
+    func startFetchingProfileData() {
+        interactor?.fetchProfileData()
+    }
   
-  
-}
-
-extension ProfileListPresenter : ViewToPresenterProtocol{
-  func startFetchingProfileData() {
-    interactor?.fetchProfileData()
-  }
   
 }
 
 extension ProfileListPresenter: InteractorToPresenterProtocol{
   
-  func profileDataFetchedSuccess(profileModelArray: Array<ProfileModel>) {
+  func profileDataFetchedSuccess(profileModelArray: [Profile]) {
     view?.showProfileData(modelArray: profileModelArray)
   }
   

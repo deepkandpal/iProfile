@@ -19,16 +19,23 @@ class iProfileTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    // Asynchronous api call unit test cases for success and fail.
+    func testProfileAsyncCalback() {
+        let expectationDes = expectation(description: "statusCode: 200")
+        let profileNetworkManager = NetworkManager()
+        guard let url = URL.init(string:kURL) else { return }
+        
+        profileNetworkManager.getProfileDataFromServer(url: url, completion:({(data:[Profile]?, error:Error?) in
+            if let profileData = data {
+                XCTAssertNotNil(profileData)
+                expectationDes.fulfill()        //tells process is complete
+            }else {
+                //No profile data at server
+                if let error = error{
+                    XCTFail("Error: \(error.localizedDescription)")  // show error
+                }
+            }}))
+        wait(for: [expectationDes], timeout: 10) //tells wait for 10 secs or throw error
     }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }

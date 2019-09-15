@@ -8,10 +8,30 @@
 
 import UIKit
 
-class ProfileListRouter: NSObject {
-  let view:ProfileListTableViewController?
-  init(view:ProfileListTableViewController ) {
-    self.view = view
-  }
+class ProfileListRouter: PresenterToRouterProtocol{
+    
+    class func createModule() ->UITableViewController{
+        let view = mainstoryboard.instantiateViewController(withIdentifier: "ProfileListTableViewController") as? ProfileListTableViewController
+        let presenter: ProfileViewToPresenterProtocol & InteractorToPresenterProtocol = ProfileListPresenter();
+        let interactor: PresenterToInteractorProtocol = ProfileListInteractor();
+        let router: PresenterToRouterProtocol = ProfileListRouter();
+        
+        view?.presenter = presenter;
+        presenter.view = view;
+        presenter.router = router;
+        presenter.interactor = interactor;
+        interactor.presenter = presenter;
+        
+        return view!;
+        
+        //}
+        
+        //return UIViewController()
+    }
+    
+    static var mainstoryboard: UIStoryboard{
+        return UIStoryboard(name:"Main",bundle: Bundle.main)
+    }
 }
+
 
